@@ -11,7 +11,7 @@
 - **База данных:** SQLite3
 - **Оркестрация ИИ:** LangChain (`langchain-ollama`)
 - **LLM Engine:** Ollama
-- **Модели:** SQL-агент и кастомная сборка `R-407` (`qwen2.5-coder:3b`базовая модель `gemma4:e2b`, настроенная через `Modelfile`)
+- **Модели:** `qwen2.5-coder:3b`, `gemma4:e2b`
 
 ## Архитектура
 Проект построен на принципах ООП с жестким разделением ответственности (Separation of Concerns):
@@ -23,11 +23,11 @@
 - Установленная [Ollama](https://ollama.com/)
 
 **Шаги:**
-1. Клонировать репозиторий:
+1. **Клонировать репозиторий:**
    ```bash
    git clone [https://github.com/aikaz-rushanyan/r407-local-agent.git](https://github.com/aikaz-rushanyan/r407-local-agent.git)
-   
-2. Скачать модели:
+   ```
+2. **Скачать модели:**
    ```bash
    ollama pull qwen2.5-coder:3b
    ```
@@ -35,11 +35,11 @@
    ollama pull gemma4:e2b
    ```
 
-3.Собрать кастомную модель R-407 в локальном движке Ollama:
+3. **Собрать кастомную модель R-407 в локальном движке Ollama:**
 ```bash
 ollama create R-407 -f Modelfile
 ```
-4. Создать и активировать виртуальное окружение:
+4. **Создать и активировать виртуальное окружение:**
 ```bash
 python -m venv venv 
 venv\Scripts\activate # Для Windows
@@ -52,7 +52,7 @@ pip install -r requirements.txt
 ```bash
 python data_collector.py
 ```  
-6. **Запустить агента:**
+7. **Запустить агента:**
 ```bash
 python main_agent.py
 ```

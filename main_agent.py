@@ -1,7 +1,7 @@
 from db_agent import DatabaseAnalyst
 from langchain_ollama import OllamaLLM
 
-'ГЛАВНЫЙ КЛАСС, КОТОРЫЙ ПЕРЕВОДИТ ОТВЕТЫ ПОМОЩНИКОВ ПОД СТИЛЬ ДРОИДА'
+#ГЛАВНЫЙ КЛАСС, КОТОРЫЙ ПЕРЕВОДИТ ОТВЕТЫ ПОМОЩНИКОВ ПОД СТИЛЬ ДРОИДА
 
 class MainAgent:
     llm: str

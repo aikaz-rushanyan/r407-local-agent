@@ -1,7 +1,7 @@
 import sqlite3
 from langchain_ollama import OllamaLLM
 
-'КЛАСС ДЛЯ ОБРАБОТКИ ЗАПРОСОВ БЕРУЩИХ ДАННЫЕ ИЗ БАЗЫ ДАННЫХ'
+#КЛАСС ДЛЯ ОБРАБОТКИ ЗАПРОСОВ БЕРУЩИХ ДАННЫЕ ИЗ БАЗЫ ДАННЫХ
 
 class DatabaseAnalyst:
     db_path: str

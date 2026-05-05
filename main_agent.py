@@ -7,7 +7,7 @@ class MainAgent:
     llm: str
 
     def __init__(self, llm_model='R-407'):
-        self.llm = OllamaLLM(model=llm_model, temperature=0.7)
+        self.llm = self.llm = OllamaLLM(model="R-407", temperature=0.7)
 
     def answer(self, user_request: str, db_data):
         prompt = f'''

@@ -7,7 +7,7 @@ class DatabaseAnalyst:
     db_path: str
     llm: str
 
-    def __init__(self, db_path: str, llm_model='qwen2.5-coder:3b'):
+    def __init__(self, db_path: str, llm_model='R-407'):
         self.db_path = db_path
         self.llm = OllamaLLM(model=llm_model, temperature=0)
         self.schema = '''

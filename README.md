@@ -48,9 +48,13 @@ venv\Scripts\activate # Для Windows
 ```bash
 pip install -r requirements.txt
 ```
+6. **Запустить data_collector.py для сбора данных (автоматически создаст data/screen_time.db)**
+```bash
+python data_collector.py
+```  
 6. **Запустить агента:**
 ```bash
 python main_agent.py
 ```
 **Примечание:** 
-Сама база данных `screen_time.db` и виртуальное окружение добавлены в `.gitignore` из соображений приватности. Для тестирования необходимо использовать собственную базу SQLite со схемой логов времени.
+Сама база данных `screen_time.db` и виртуальное окружение добавлены в `.gitignore` из соображений приватности. Для тестирования необходимо использовать собственную базу SQLite со схемой логов времени (используйте data_collector.py).

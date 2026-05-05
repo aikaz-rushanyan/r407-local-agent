@@ -27,26 +27,30 @@
    ```bash
    git clone [https://github.com/aikaz-rushanyan/r407-local-agent.git](https://github.com/aikaz-rushanyan/r407-local-agent.git)
    
-Скачать модели:
+2. Скачать модели:
+   ```bash
+   ollama pull qwen2.5-coder:3b
+   ```
+   ```bash
+   ollama pull gemma4:e2b
+   ```
 
-ollama pull qwen2.5-coder:3b
-ollama pull gemma4:e2b
-
-Собрать кастомную модель R-407 в локальном движке Ollama:
-
+3.Собрать кастомную модель R-407 в локальном движке Ollama:
+```bash
 ollama create R-407 -f Modelfile
-
-3. Создать и активировать виртуальное окружение:
-
+```
+4. Создать и активировать виртуальное окружение:
+```bash
 python -m venv venv 
 venv\Scripts\activate # Для Windows
-   
-**Установить зависимости:**
-
+```   
+5. **Установить зависимости:**
+```bash
 pip install -r requirements.txt
-
-**Запустить агента:**
-
+```
+6. **Запустить агента:**
+```bash
 python main_agent.py
-
-**Примечание:** Сама база данных `screen_time.db` и виртуальное окружение добавлены в `.gitignore` из соображений приватности. Для тестирования необходимо использовать собственную базу SQLite со схемой логов времени.
+```
+**Примечание:** 
+Сама база данных `screen_time.db` и виртуальное окружение добавлены в `.gitignore` из соображений приватности. Для тестирования необходимо использовать собственную базу SQLite со схемой логов времени.

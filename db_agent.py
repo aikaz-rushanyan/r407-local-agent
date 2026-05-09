@@ -1,5 +1,4 @@
 #КЛАСС ДЛЯ ОБРАБОТКИ ЗАПРОСОВ БЕРУЩИХ ДАННЫЕ ИЗ БАЗЫ ДАННЫХ
-
 import sqlite3
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -17,7 +16,7 @@ class DatabaseAnalyst:
     db_path: str
     llm: str
 
-    def __init__(self, db_path: str, llm_model='gemini-3-flash-preview'):
+    def __init__(self, db_path: str, llm_model='gemini-2.5-flash'):
         self.db_path = db_path
         self.llm = ChatGoogleGenerativeAI(
             model=llm_model, 
@@ -41,9 +40,8 @@ class DatabaseAnalyst:
         Запрос пользователя: {user_request}
         Верни ТОЛЬКО валидный SQLite запрос. Никакого текста.
         '''
-        raw = self.llm.invoke(prompt)
-        return raw.text
-        #return raw.replace('```', '').replace('sql', '')
+        raw = self.llm.invoke(prompt)  
+        return raw.text.replace('```', '').replace('sqlite', '').strip()
         
     def get_data(self, user_request: str):
         sql_query = self._generate(user_request)

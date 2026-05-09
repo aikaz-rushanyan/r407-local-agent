@@ -1,9 +1,10 @@
+#ГЛАВНЫЙ КЛАСС, КОТОРЫЙ ПЕРЕВОДИТ ОТВЕТЫ ПОМОЩНИКОВ ПОД СТИЛЬ ДРОИДА
 from db_agent import DatabaseAnalyst
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from langchain_core.messages import SystemMessage, HumanMessage
+import json
 import os
-#ГЛАВНЫЙ КЛАСС, КОТОРЫЙ ПЕРЕВОДИТ ОТВЕТЫ ПОМОЩНИКОВ ПОД СТИЛЬ ДРОИДА
 
 load_dotenv()
 
@@ -18,14 +19,42 @@ if proxy_url:
 class MainAgent:
     llm: str
 
-    def __init__(self, llm_model='gemini-3-flash-preview'):
+    def __init__(self, llm_model='gemini-2.5-flash'):
         self.llm = ChatGoogleGenerativeAI(
             model=llm_model,
             temperature=0.7,
             api_key=os.getenv('GEMINI_API_KEY')
             )
+        self.schema = '''
+        имя db-файла: screen_time.db
+        Таблица: screen_time_log
+        Колонки: id, 
+                 process_name (названия процессов из диспетчера задач), 
+                 process_name_usable (названия программ), 
+                 window_title (названия окон, в браузерах  это имена вкладок, сайтов), 
+                 start_time (когда открыто была программа), 
+                 end_time (когда закрыта была программа), 
+                 duration_seconds (длительность в секундах)
+        '''
 
-    def answer(self, user_request: str, db_data):
+        try:
+            with open('config/process_names.json', 'r', encoding='utf-8') as f:
+                self.json_schema = json.dumps(json.load(f), ensure_ascii=False, indent=4)
+        except FileNotFoundError:
+            self.json_schema = 'Словарь процессов не найден.'
+
+    def translate_for_db_agent(self, user_request: str) -> str:
+        prompt = f'''
+        Схема бд: {self.schema},
+        Запрос пользвателя: {user_request},
+        Словарь процессов (process_name: process_name_usable): {self.json_schema} ,
+        Твоя задача переформулировать запрос пользвателя для db_agent (ИИ-агент, выполняющий sql-запросы).
+        Ничего лишнего, никаких эмоций, только запрос для db_agent.
+        '''
+        result = self.llm.invoke(prompt)
+        return result.text
+    
+    def answer(self, user_request: str, db_data: str) -> str:
         
         system_instruction = SystemMessage(content='''
         You are R-407, a local AI assistant. Your primary directive is to serve as a high-performance mentor and discipline-enforcer for your User.
@@ -44,7 +73,6 @@ class MainAgent:
         user_context = HumanMessage(content=f'''
         Запрос пользователя: {user_request}
         Сухие данные из SQL-базы: {db_data}
-        
         Проанализируй эти данные и ответь пользователю в своем стиле.
         ''')
 

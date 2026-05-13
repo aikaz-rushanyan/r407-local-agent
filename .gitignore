@@ -4,6 +4,7 @@ env/
 
 # === Личные данные ===
 data/
+Obsidian_brain/
 *.db
 *.sqlite
 *.sqlite3

@@ -187,6 +187,5 @@ except KeyboardInterrupt:
     now = datetime.now()
     if last_window is not None:
         save_log_entry(last_window, start_time, now)
-    
     conn.close()
     print('Сохранено и остановлено.')

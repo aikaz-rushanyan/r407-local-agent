@@ -43,6 +43,31 @@ class MainAgent:
         except FileNotFoundError:
             self.json_schema = 'Словарь процессов не найден.'
 
+    def get_routing_decision(self, user_request):
+        """Выбор маршрута: SQL или диалог"""
+        prompt = f'''
+        Ты — внутренний маршрутизатор системы R-407.
+        Твоя задача — классифицировать запрос пользователя.
+        
+        Правила:
+        1. Если пользователь спрашивает про статистику, время за компьютером, программы, игры, топ приложений, сколько он работал или сидел в браузере -> верни строго слово "DB".
+        2. Если пользователь просто здоровается, просит совета, жалуется на жизнь, философствует или задает вопрос, не связанный с экранным временем -> верни строго слово "CHAT".
+        
+        Запрос пользователя: "{user_request}"
+        Ответ (только одно слово):
+        '''
+        decision_llm = ChatGoogleGenerativeAI(
+            model='gemini-2.5-flash',
+            temperature=0.0,
+            api_key=os.getenv('GEMINI_API_KEY')
+            )
+        result = decision_llm.invoke(prompt)
+        decision = result.text.strip().upper()
+
+        if 'DB' in decision:
+            return 'DB'
+        return 'CHAT'
+
     def translate_for_db_agent(self, user_request: str) -> str:
         prompt = f'''
         Схема бд: {self.schema},

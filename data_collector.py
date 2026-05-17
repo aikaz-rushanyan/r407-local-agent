@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 import time
 import psutil
 import win32gui
@@ -14,6 +15,9 @@ from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessio
 
 # --- НАСТРОЙКИ AFK ---
 AFK_THRESHOLD_SECONDS = 180  # 3 минуты бездействия = скрипт встает на паузу
+# --- OBSIDIAN ---
+OBSIDIAN_BRAIN_PATH = 'Obsidian_brain/Daily_logs'
+os.makedirs(OBSIDIAN_BRAIN_PATH, exist_ok=True)
 
 # Структура для получения времени последнего инпута от Windows
 class LASTINPUTINFO(ctypes.Structure):
@@ -68,6 +72,7 @@ conn = sqlite3.connect('data/screen_time.db')
 cursor = conn.cursor()
 
 def run_query(query, params=(), many=False):
+    """Быстрый SQL-запрос"""
     result = None
     if query.strip().upper().startswith('SELECT'):
         cursor.execute(query, params)
@@ -116,10 +121,42 @@ def generate_name(proc_name):
     name = ''.join([i for i in name if not i.isdigit()]) + '*'
     return name
 
+def write_to_obsidian_log(start_t, end_t, process_name_usable, window_title, duration_seconds):
+    """Создание логов в формате md"""
+    #Перевод в минуты
+    duration_min = round(duration_seconds / 60, 2)
+
+    #Меньше минуты - мусор
+    if duration_min < 0.5:
+        return
+    
+    #Перевод в формат час:минута (14:05 - 14:15)
+    start_str = start_t.strftime('%H:%M')
+    end_str = end_t.strftime('%H:%M')
+
+    #Название лога - дата
+    date_str = start_t.strftime('%Y-%m-%d')
+    file_path = os.path.join(OBSIDIAN_BRAIN_PATH, f'{date_str}.md')
+
+    #Создание лога
+    log_line = f'⌛ {start_str} - {end_str} | 🖥️ {process_name_usable} - {duration_min} | 🦖 {window_title}'
+
+    #Проверка на существование файла
+    file_exists = os.path.exists(file_path)
+
+    #Открываем файл в режиме 'append'
+    with open(file_path, 'a', encoding='utf-8') as f:
+        #Если записей нет - пишем заголовок
+        if not file_exists and os.path.getsize(file_path) == 0:
+            f.write(f'🧠 Логи активности за {date_str}\n\n')
+        #Запись лога
+        f.write(f'{log_line}\n')
+
 def save_log_entry(last_w, start_t, end_t):
     """Запись в базу данных sqlite.
     process_name, process_name_usable, window_title, 
     start_time, end_time, duration_seconds"""
+
     duration = int((end_t - start_t).total_seconds())
     process_name, window_title = last_w
 
@@ -143,8 +180,12 @@ def save_log_entry(last_w, start_t, end_t):
                     end_t.strftime('%Y-%m-%d %H:%M:%S'), 
                     duration))
         
-        conn.commit()          
-        print(f'Сохранено: {names.get(process_name, process_name)} | {duration} сек')
+        conn.commit()
+
+        clean_name = names.get(process_name, process_name)
+        write_to_obsidian_log(start_t, end_t, clean_name, window_title, duration)
+
+        print(f'Сохранено: {clean_name} | {duration} сек')
 
 try:
     last_window = None
@@ -164,7 +205,7 @@ try:
             now = datetime.now()
             end_t = now
             
-            # Трюк с отмоткой времени: если мы только что провалились в AFK, 
+            # Отмотка времени: если мы только что провалились в AFK, 
             # значит последние X секунд мы уже ничего не делали. Вычитаем их из активной программы.
             if current_window[0] == 'AFK':
                 end_t = now - timedelta(seconds=AFK_THRESHOLD_SECONDS)
@@ -187,5 +228,6 @@ except KeyboardInterrupt:
     now = datetime.now()
     if last_window is not None:
         save_log_entry(last_window, start_time, now)
+    
     conn.close()
     print('Сохранено и остановлено.')

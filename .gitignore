@@ -3,6 +3,7 @@ venv/
 env/
 
 # === Личные данные ===
+Obsidian_brain/
 data/
 *.db
 *.sqlite

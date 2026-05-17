@@ -27,8 +27,15 @@ if user_request := st.chat_input('Спроси что-нибудь про сво
     
     with st.spinner('R-407 напрягает свои микросхемы...'):
         try:
-            raw_data = analyst_agent.get_data(main_agent.translate_for_db_agent(user_request))
-            ai_answer = main_agent.answer(user_request, raw_data)
+            decision = main_agent.get_routing_decision(user_request)
+            if decision == 'DB':
+                st.toast('Активирован модуль анализа БД', icon='📊')
+                raw_data = analyst_agent.get_data(main_agent.translate_for_db_agent(user_request))
+                ai_answer = main_agent.answer(user_request, raw_data)
+            else:
+                st.toast('Активирован модуль диалога', icon='💬')
+                ai_answer = main_agent.answer(user_request, db_data="Данные БД не требуются. Веди обычный диалог в своем стиле.")
+        
         except Exception as e:
             ai_answer = f'Микросхемы воспылали... Ошибка: {e}'
 

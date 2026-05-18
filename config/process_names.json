@@ -37,5 +37,7 @@
     "SnippingTool.exe": "SnippingTool*",
     "pythonw.exe": "pythonw*",
     "MstyStudio.exe": "MstyStudio",
-    "EXCEL.EXE": "Microsoft Excel"
+    "EXCEL.EXE": "Microsoft Excel",
+    "msinfo32.exe": "msinfo*",
+    "Obsidian.exe": "Obsidian*"
 }

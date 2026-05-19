@@ -39,5 +39,8 @@
     "MstyStudio.exe": "MstyStudio",
     "EXCEL.EXE": "Microsoft Excel",
     "msinfo32.exe": "msinfo*",
-    "Obsidian.exe": "Obsidian*"
+    "Obsidian.exe": "Obsidian*",
+    "ShellExperienceHost.exe": "ShellExperienceHost*",
+    "BitTorrent.exe": "BitTorrent*",
+    "mspaint.exe": "mspaint*"
 }

@@ -209,7 +209,7 @@ def receive_browser_log():
     data = request.json
     
     # Расширение пришлет: process_name, window_title, duration_seconds
-    proc_name = data.get('process_name', 'Chrome')
+    proc_name = data.get('process_name', 'Browser')
     window_title = data.get('window_title', 'Unknown Tab')
     duration = int(data.get('duration_seconds', 0))
     

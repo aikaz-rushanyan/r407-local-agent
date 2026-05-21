@@ -10,14 +10,22 @@ import ctypes
 from ctypes import wintypes
 from datetime import datetime, timedelta
 import asyncio
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import threading
 from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
 from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionPlaybackStatus
 
+# --- ИГНОР БРАУЗЕРОВ ---
+BROWSERS_TO_IGNORE = {'chrome.exe', 'msedge.exe', 'browser.exe', 'yandex.exe', 'opera.exe', 'brave.exe'}
 # --- НАСТРОЙКИ AFK ---
 AFK_THRESHOLD_SECONDS = 180  # 3 минуты бездействия = скрипт встает на паузу
 # --- OBSIDIAN ---
 OBSIDIAN_BRAIN_PATH = 'Obsidian_brain/Daily_logs'
 os.makedirs(OBSIDIAN_BRAIN_PATH, exist_ok=True)
+
+# Замок для безопасной записи в базу из разных потоков (Main loop и Flask)
+db_lock = threading.Lock()
 
 # Структура для получения времени последнего инпута от Windows
 class LASTINPUTINFO(ctypes.Structure):
@@ -68,20 +76,22 @@ os.makedirs('data', exist_ok=True)
 with open('config/process_names.json', 'r', encoding='utf-8') as file:
     names = json.load(file)
 
-conn = sqlite3.connect('data/screen_time.db')
+conn = sqlite3.connect('data/screen_time.db', check_same_thread=False)
 cursor = conn.cursor()
 
 def run_query(query, params=(), many=False):
     """Быстрый SQL-запрос"""
     result = None
-    if query.strip().upper().startswith('SELECT'):
-        cursor.execute(query, params)
-        result = cursor.fetchall()
-    else:
-        if many:
-            cursor.executemany(query, params)
-        else:
+    with db_lock:
+        if query.strip().upper().startswith('SELECT'):
             cursor.execute(query, params)
+            result = cursor.fetchall()
+        else:
+            if many:
+                cursor.executemany(query, params)
+            else:
+                cursor.execute(query, params)
+            conn.commit()
     return result
 
 run_query('''
@@ -160,6 +170,10 @@ def save_log_entry(last_w, start_t, end_t):
     duration = int((end_t - start_t).total_seconds())
     process_name, window_title = last_w
 
+    #Проверка на браузер
+    if process_name.lower() in BROWSERS_TO_IGNORE:
+        return
+    
     # Если мы были в режиме AFK, мы просто игнорируем это и не пишем в базу
     if process_name == 'AFK':
         print(f'Пауза AFK завершена. Время отсутствия: {duration} сек.')
@@ -187,47 +201,88 @@ def save_log_entry(last_w, start_t, end_t):
 
         print(f'Сохранено: {clean_name} | {duration} сек')
 
-try:
-    last_window = None
-    start_time = datetime.now()
+app = Flask(__name__)
+CORS(app) # Чтобы браузер не ругался на CORS-политику безопасности
 
-    print(f"Сборщик запущен. Таймер AFK: {AFK_THRESHOLD_SECONDS} секунд.")
-
-    while True:
-        idle_seconds = get_idle_duration()
-        # Если комп не трогали дольше лимита, принудительно переводим окно в статус AFK
-        if idle_seconds >= AFK_THRESHOLD_SECONDS and not check_media():
-            current_window = ('AFK', 'Away From Keyboard')
-        else:
-            current_window = get_current_window()
-
-        if current_window != last_window:
-            now = datetime.now()
-            end_t = now
-            
-            # Отмотка времени: если мы только что провалились в AFK, 
-            # значит последние X секунд мы уже ничего не делали. Вычитаем их из активной программы.
-            if current_window[0] == 'AFK':
-                end_t = now - timedelta(seconds=AFK_THRESHOLD_SECONDS)
-                
-            if last_window is not None:
-                save_log_entry(last_window, start_time, end_t)
-                
-            last_window = current_window
-            
-            # Если мы провалились в AFK, то он начался X секунд назад.
-            # Если мы вернулись из AFK, активная работа началась прямо сейчас.
-            if current_window[0] == 'AFK':
-                start_time = end_t 
-            else:
-                start_time = now
-        
-        time.sleep(1)
-
-except KeyboardInterrupt:
-    now = datetime.now()
-    if last_window is not None:
-        save_log_entry(last_window, start_time, now)
+@app.route('/log', methods=['POST'])
+def receive_browser_log():
+    data = request.json
     
-    conn.close()
-    print('Сохранено и остановлено.')
+    # Расширение пришлет: process_name, window_title, duration_seconds
+    proc_name = data.get('process_name', 'Chrome')
+    window_title = data.get('window_title', 'Unknown Tab')
+    duration = int(data.get('duration_seconds', 0))
+    
+    if duration <= 0:
+        return jsonify({"status": "ignored", "reason": "zero duration"}), 200
+
+    end_time = datetime.now()
+    start_time = end_time - timedelta(seconds=duration)
+
+    # Пишем напрямую в базу
+    run_query('''INSERT INTO screen_time_log(process_name, process_name_usable, window_title, start_time, end_time, duration_seconds) 
+                VALUES (?, ?, ?, ?, ?, ?)''', 
+                (proc_name, "Браузер", window_title, 
+                 start_time.strftime('%Y-%m-%d %H:%M:%S'), 
+                 end_time.strftime('%Y-%m-%d %H:%M:%S'), duration))
+    conn.commit()
+
+    # Пишем в Obsidian
+    write_to_obsidian_log(start_time, end_time, "Браузер", window_title, duration)
+    print(f'Сохранено (Браузер): {window_title} | {duration} сек')
+    
+    return jsonify({"status": "success"}), 200
+
+def start_server():
+    # Запускаем сервер на порту 5000 без дебаг-режима, чтобы не ломать потоки
+    app.run(port=5000, debug=False, use_reloader=False)
+
+if __name__ == '__main__':
+    try:
+        server_thread = threading.Thread(target=start_server, daemon=True)
+        server_thread.start()
+        print("API-сервер для браузерного расширения запущен на http://127.0.0.1:5000")
+
+        last_window = None
+        start_time = datetime.now()
+
+        print(f"Сборщик запущен. Таймер AFK: {AFK_THRESHOLD_SECONDS} секунд.")
+
+        while True:
+            idle_seconds = get_idle_duration()
+            # Если комп не трогали дольше лимита, принудительно переводим окно в статус AFK
+            if idle_seconds >= AFK_THRESHOLD_SECONDS and not check_media():
+                current_window = ('AFK', 'Away From Keyboard')
+            else:
+                current_window = get_current_window()
+
+            if current_window != last_window:
+                now = datetime.now()
+                end_t = now
+                
+                # Отмотка времени: если мы только что провалились в AFK, 
+                # значит последние X секунд мы уже ничего не делали. Вычитаем их из активной программы.
+                if current_window[0] == 'AFK':
+                    end_t = now - timedelta(seconds=AFK_THRESHOLD_SECONDS)
+                    
+                if last_window is not None:
+                    save_log_entry(last_window, start_time, end_t)
+                    
+                last_window = current_window
+                
+                # Если мы провалились в AFK, то он начался X секунд назад.
+                # Если мы вернулись из AFK, активная работа началась прямо сейчас.
+                if current_window[0] == 'AFK':
+                    start_time = end_t 
+                else:
+                    start_time = now
+            
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        now = datetime.now()
+        if last_window is not None:
+            save_log_entry(last_window, start_time, now)
+        
+        conn.close()
+        print('Сохранено и остановлено.')

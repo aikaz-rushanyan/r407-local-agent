@@ -1,5 +1,6 @@
 import sqlite3
 from langchain_ollama import OllamaLLM
+from datetime import datetime
 
 #КЛАСС ДЛЯ ОБРАБОТКИ ЗАПРОСОВ БЕРУЩИХ ДАННЫЕ ИЗ БАЗЫ ДАННЫХ
 
@@ -7,12 +8,18 @@ class DatabaseAnalyst:
     db_path: str
     llm: str
 
-    def __init__(self, db_path: str, llm_model='R-407'):
+    def __init__(self, db_path: str, llm_model='R-407-gemma3:4b'):
         self.db_path = db_path
-        self.llm = OllamaLLM(model=llm_model, temperature=0)
-        self.schema = '''
+        self.llm = OllamaLLM(model=llm_model, temperature=0.1)
+        self.schema = f'''
         Таблица: screen_time_log
-        Колонки: id, process_name, process_name_usable, window_title, start_time, end_time, duration_seconds
+        Колонки: id, 
+                 process_name (названия из диспетчера задач), 
+                 process_name_usable (названия программ), 
+                 window_title (названия окон, в браузерах это имена вкладок, сайтов), 
+                 start_time, 
+                 end_time, 
+                 duration_seconds (длительность в секундах)
         '''
 
     def _generate(self, user_request: str):
@@ -22,7 +29,7 @@ class DatabaseAnalyst:
         Верни ТОЛЬКО валидный SQLite запрос. Никакого текста.
         '''
         raw = self.llm.invoke(prompt)
-        return raw.replace('```', '').replace('sql', '')
+        return raw.replace('```', '').replace('sql', '').strip()
         
     def get_data(self, user_request: str):
         sql_query = self._generate(user_request)

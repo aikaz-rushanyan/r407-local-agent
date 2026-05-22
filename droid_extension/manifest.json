@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Droid Browser Logger",
+  "version": "1.2",
+  "description": "Логгер активности для R-407",
+  "permissions": ["tabs", "activeTab", "idle"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "background.html"
+  }
+}

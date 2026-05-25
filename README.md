@@ -11,7 +11,7 @@
 - **База данных:** SQLite3
 - **Оркестрация ИИ:** LangChain (`langchain-ollama`, `langchain_google_genai`)
 - **LLM Engine:** Ollama, API
-- **Модели:** `qwen2.5-coder:3b`, `gemma4:e2b`
+- **Модели:** `gemma3:4b`
 
 ## Архитектура
 Проект построен на принципах ООП с жестким разделением ответственности (Separation of Concerns):

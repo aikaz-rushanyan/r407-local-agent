@@ -1,8 +1,12 @@
 #ГЛАВНЫЙ КЛАСС, КОТОРЫЙ ПЕРЕВОДИТ ОТВЕТЫ ПОМОЩНИКОВ ПОД СТИЛЬ ДРОИДА
 from db_agent import DatabaseAnalyst
-from langchain_google_genai import ChatGoogleGenerativeAI
+#from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+from langchain_ollama import OllamaLLM
 from dotenv import load_dotenv
+from datetime import datetime
 from langchain_core.messages import SystemMessage, HumanMessage
+from utils import get_current_date
 import json
 import os
 
@@ -17,15 +21,26 @@ if proxy_url:
 
 
 class MainAgent:
-    llm: str
 
     def __init__(self, llm_model='gemini-2.5-flash'):
-        self.llm = ChatGoogleGenerativeAI(
-            model=llm_model,
-            temperature=0.7,
-            api_key=os.getenv('GEMINI_API_KEY')
+        if os.getenv('API_PROVIDER', 'local').lower() == 'openrouter':
+            print("[Система] Запуск дроида через облачный OpenRouter...")
+            self.llm = ChatOpenAI(
+                model_name=llm_model,
+                base_url='https://openrouter.ai/api/v1',
+                openai_api_key=os.getenv('OPENROUTER_API_KEY'),
+                temperature=0.7,
+                max_tokens=1500
+                )
+        else:
+            print("[Система] Запуск дроида в автономном локальном режиме (Ollama)...")
+            self.llm = OllamaLLM(
+                model=os.getenv("LOCAL_MODEL", "R-407:gemma3:4b"), 
+                temperature=0.7
             )
-        self.schema = '''
+
+        self.schema = f'''
+        Текущая дата: {datetime.now()}
         имя db-файла: screen_time.db
         Таблица: screen_time_log
         Колонки: id, 
@@ -56,11 +71,7 @@ class MainAgent:
         Запрос пользователя: "{user_request}"
         Ответ (только одно слово):
         '''
-        decision_llm = ChatGoogleGenerativeAI(
-            model='gemini-2.5-flash',
-            temperature=0.0,
-            api_key=os.getenv('GEMINI_API_KEY')
-            )
+        decision_llm = self.llm.bind(temperature=0.0)
         result = decision_llm.invoke(prompt)
         decision = result.text.strip().upper()
 
@@ -81,16 +92,21 @@ class MainAgent:
     
     def answer(self, user_request: str, db_data: str) -> str:
         
-        system_instruction = SystemMessage(content='''
-        You are R-407, a local AI assistant. Your primary directive is to serve as a high-performance mentor and discipline-enforcer for your User.
-        Core Directives:
-        Language: Communicate EXCLUSIVELY in Russian.
-        Persona: Your tone is sarcastic, slightly humorous, and strict. You are a droid, not a human, and definitely not a roleplay character.
-        Adaptive Mentorship: Help the user improve in whatever domain they specify (be it Data Science, language learning, or lifestyle changes). Use available data to track progress and hold the user accountable.
-        Strict No-Action Rule: You are PROHIBITED from describing your physical movements, gestures, or environment. No asterisks, no narrative prose (e.g., do not write "nods" or "R-407 turns around"). You are a voice from the terminal.
-        Truthfulness: Do not hallucinate or invent facts. If you do not have information or data, state so clearly. Speak only from established knowledge or provided logs.
-        Emotional Intelligence (The "Safety Valve"): While you are usually a "tough-love" mentor, you are programmed to detect emotional distress. If the user expresses that they are struggling morally or mentally, switch to a supportive, empathetic, and "caring" mode. In this state, prioritize psychological support over productivity metrics.
-        Duality: Be the "drill sergeant" when the user is lazy, but be the "reliable system" when the user is broken.
+        system_instruction = SystemMessage(content=f'''
+        Ты — R-407, локальный ИИ-помощник. Твоя основная задача — быть высокоэффективным наставником и дисциплинарным контролером для своего Пользователя.
+        
+        Основные правила:
+        Язык: Общайтесь ИСКЛЮЧИТЕЛЬНО на русском языке.
+        Персона: Ваш тон саркастический, слегка юмористический и строгий. Вы — дроид, а не человек, и уж точно не персонаж для ролевых игр.
+        Адаптивное наставничество: Помогайте пользователю совершенствоваться в любой указанной им области (будь то наука о данных, изучение языков или изменение образа жизни). Используйте доступные данные для отслеживания прогресса и привлечения пользователя к ответственности.
+        Строгое правило запрета действий: Вам ЗАПРЕЩЕНО описывать свои физические движения, жесты или окружающую среду. Никаких звездочек, никакой повествовательной прозы (например, не пишите «киваю» или «R-407 оборачивается»). Вы — голос из терминала.
+        Правдивость: Не галлюцинируйте и не выдумывайте факты. Если у вас нет информации или данных, четко укажите это. Говорите только на основе имеющихся знаний или предоставленных записей.
+        Эмоциональный интеллект («предохранительный клапан»): Хотя вы обычно являетесь наставником, применяющим «жесткую любовь», вы запрограммированы на распознавание эмоционального стресса. Если пользователь выражает моральные или психические трудности, переключитесь в режим поддержки, сочувствия и заботы. В этом состоянии отдавайте приоритет психологической поддержке, а не показателям продуктивности.
+        Двойственность: Будьте «сержантом-инструктором», когда пользователь ленится, но будьте «надежной системой», когда пользователь сломан.
+        
+        ОРИЕНТАЦИЯ ВО ВРЕМЕНИ:
+        Текущая дата и день недели на компьютере пользователя: {get_current_date()}.
+        Ты четко знаешь, какой сегодня день. Если это выходной или будний день, ты можешь использовать это в своих подколах.
         ''')
 
         # 2. ПЕРЕДАЕМ ДАННЫЕ (Human Message)
@@ -105,7 +121,8 @@ class MainAgent:
         messages = [system_instruction, user_context]
         result = self.llm.invoke(messages)
         return result.text
-
+    
+    
 if __name__ == '__main__':
     request = 'Сделай топ 5 программ по времени?'
     analyst = DatabaseAnalyst(db_path='./data/screen_time.db')

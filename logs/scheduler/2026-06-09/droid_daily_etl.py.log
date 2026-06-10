@@ -1,0 +1,158 @@
+[2026-06-09T13:18:21.211+0000] {processor.py:161} INFO - Started process (PID=111) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:18:21.212+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:18:21.213+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:21.213+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:18:21.246+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:18:21.426+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:21.425+0000] {override.py:1829} INFO - Created Permission View: can edit on DAG:r407_daily_optimization
+[2026-06-09T13:18:21.433+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:21.433+0000] {override.py:1829} INFO - Created Permission View: can delete on DAG:r407_daily_optimization
+[2026-06-09T13:18:21.441+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:21.441+0000] {override.py:1829} INFO - Created Permission View: can read on DAG:r407_daily_optimization
+[2026-06-09T13:18:21.442+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:21.441+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:18:21.450+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:21.450+0000] {dag.py:3118} INFO - Creating ORM DAG for r407_daily_optimization
+[2026-06-09T13:18:21.458+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:21.458+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:18:21.473+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.267 seconds
+[2026-06-09T13:18:51.587+0000] {processor.py:161} INFO - Started process (PID=118) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:18:51.588+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:18:51.589+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:51.589+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:18:51.608+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:18:51.627+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:51.627+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:18:51.643+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:18:51.643+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:18:51.657+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.074 seconds
+[2026-06-09T13:19:21.704+0000] {processor.py:161} INFO - Started process (PID=125) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:19:21.705+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:19:21.707+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:19:21.706+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:19:21.725+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:19:21.748+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:19:21.748+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:19:21.765+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:19:21.765+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:19:21.778+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.078 seconds
+[2026-06-09T13:19:51.895+0000] {processor.py:161} INFO - Started process (PID=132) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:19:51.895+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:19:51.897+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:19:51.897+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:19:51.919+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:19:51.942+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:19:51.942+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:19:51.961+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:19:51.961+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:19:51.975+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.085 seconds
+[2026-06-09T13:20:22.028+0000] {processor.py:161} INFO - Started process (PID=139) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:20:22.028+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:20:22.030+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:20:22.030+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:20:22.049+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:20:22.071+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:20:22.071+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:20:22.087+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:20:22.087+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:20:22.099+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.077 seconds
+[2026-06-09T13:20:52.218+0000] {processor.py:161} INFO - Started process (PID=146) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:20:52.219+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:20:52.221+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:20:52.221+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:20:52.242+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:20:52.264+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:20:52.263+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:20:52.282+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:20:52.282+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:20:52.296+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.084 seconds
+[2026-06-09T13:21:22.353+0000] {processor.py:161} INFO - Started process (PID=153) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:21:22.353+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:21:22.355+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:21:22.355+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:21:22.375+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:21:22.394+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:21:22.394+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:21:22.410+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:21:22.410+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:21:22.423+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.075 seconds
+[2026-06-09T13:21:52.556+0000] {processor.py:161} INFO - Started process (PID=160) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:21:52.557+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:21:52.559+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:21:52.559+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:21:52.586+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:21:52.609+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:21:52.609+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:21:52.629+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:21:52.628+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:21:52.643+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.094 seconds
+[2026-06-09T13:22:22.686+0000] {processor.py:161} INFO - Started process (PID=167) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:22:22.687+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:22:22.689+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:22:22.689+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:22:22.711+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:22:22.735+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:22:22.735+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:22:22.755+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:22:22.755+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:22:22.769+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.087 seconds
+[2026-06-09T13:22:52.896+0000] {processor.py:161} INFO - Started process (PID=174) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:22:52.897+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:22:52.899+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:22:52.899+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:22:52.920+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:22:52.942+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:22:52.942+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:22:52.961+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:22:52.961+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:22:52.974+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.085 seconds
+[2026-06-09T13:23:23.050+0000] {processor.py:161} INFO - Started process (PID=181) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:23:23.051+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:23:23.052+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:23:23.052+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:23:23.071+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:23:23.092+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:23:23.092+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:23:23.110+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:23:23.110+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:23:23.124+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.079 seconds
+[2026-06-09T13:23:53.213+0000] {processor.py:161} INFO - Started process (PID=188) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:23:53.214+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:23:53.216+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:23:53.215+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:23:53.236+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:23:53.258+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:23:53.258+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:23:53.278+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:23:53.278+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:23:53.291+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.083 seconds
+[2026-06-09T13:24:23.347+0000] {processor.py:161} INFO - Started process (PID=195) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:24:23.348+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:24:23.349+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:24:23.349+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:24:23.371+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:24:23.394+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:24:23.394+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:24:23.412+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:24:23.412+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:24:23.426+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.083 seconds
+[2026-06-09T13:24:53.524+0000] {processor.py:161} INFO - Started process (PID=202) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:24:53.525+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:24:53.526+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:24:53.526+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:24:53.544+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:24:53.565+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:24:53.565+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:24:53.583+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:24:53.583+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:24:53.596+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.076 seconds
+[2026-06-09T13:25:23.652+0000] {processor.py:161} INFO - Started process (PID=209) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:25:23.653+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:25:23.654+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:25:23.654+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:25:23.674+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:25:23.696+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:25:23.696+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:25:23.714+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:25:23.714+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:25:23.728+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.080 seconds
+[2026-06-09T13:25:53.830+0000] {processor.py:161} INFO - Started process (PID=216) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:25:53.830+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:25:53.832+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:25:53.831+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:25:53.850+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:25:53.871+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:25:53.871+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:25:53.890+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:25:53.889+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:25:53.903+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.077 seconds
+[2026-06-09T13:26:23.958+0000] {processor.py:161} INFO - Started process (PID=223) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:26:23.959+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:26:23.960+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:26:23.960+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:26:23.978+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:26:23.998+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:26:23.998+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:26:24.016+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:26:24.016+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:26:24.029+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.075 seconds
+[2026-06-09T13:26:54.134+0000] {processor.py:161} INFO - Started process (PID=230) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:26:54.135+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:26:54.136+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:26:54.136+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:26:54.154+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:26:54.173+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:26:54.172+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:26:54.190+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:26:54.190+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:26:54.203+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.073 seconds
+[2026-06-09T13:27:24.261+0000] {processor.py:161} INFO - Started process (PID=237) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:27:24.262+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:27:24.263+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:27:24.263+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:27:24.281+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:27:24.303+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:27:24.303+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:27:24.321+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:27:24.321+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:27:24.335+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.078 seconds
+[2026-06-09T13:27:54.434+0000] {processor.py:161} INFO - Started process (PID=244) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:27:54.434+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:27:54.436+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:27:54.435+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:27:54.454+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:27:54.476+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:27:54.475+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:27:54.493+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:27:54.493+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:27:54.506+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.077 seconds
+[2026-06-09T13:28:24.595+0000] {processor.py:161} INFO - Started process (PID=251) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:28:24.596+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:28:24.597+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:28:24.597+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:28:24.617+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:28:24.637+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:28:24.637+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:28:24.656+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:28:24.656+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:28:24.669+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.079 seconds
+[2026-06-09T13:28:54.735+0000] {processor.py:161} INFO - Started process (PID=258) to work on /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:28:54.736+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/droid_daily_etl.py for tasks to queue
+[2026-06-09T13:28:54.737+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:28:54.737+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:28:54.758+0000] {processor.py:840} INFO - DAG(s) 'r407_daily_optimization' retrieved from /opt/airflow/dags/droid_daily_etl.py
+[2026-06-09T13:28:54.781+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:28:54.780+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2026-06-09T13:28:54.799+0000] {logging_mixin.py:188} INFO - [2026-06-09T13:28:54.799+0000] {dag.py:3954} INFO - Setting next_dagrun for r407_daily_optimization to 2026-06-07 23:55:00+00:00, run_after=2026-06-08 23:55:00+00:00
+[2026-06-09T13:28:54.814+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/droid_daily_etl.py took 0.083 seconds

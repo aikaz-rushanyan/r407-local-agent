@@ -12,12 +12,12 @@ import os
 
 load_dotenv()
 
-#прокси
-proxy_url = os.getenv('MY_PROXY')
-if proxy_url:
-    # Задаем системные переменные окружения только для текущего скрипта
-    os.environ['http_proxy'] = proxy_url
-    os.environ['https_proxy'] = proxy_url
+# #прокси
+# proxy_url = os.getenv('MY_PROXY')
+# if proxy_url:
+#     # Задаем системные переменные окружения только для текущего скрипта
+#     os.environ['http_proxy'] = proxy_url
+#     os.environ['https_proxy'] = proxy_url
 
 
 class MainAgent:

@@ -3,6 +3,8 @@ venv/
 env/
 
 # === Личные данные ===
+plugins/
+logs/
 config/
 Obsidian_brain/
 data/

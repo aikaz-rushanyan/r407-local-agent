@@ -28,9 +28,9 @@ def run_sql_aggregation():
         )
     ''')
     
-    # Твой оптимизированный SQL-запрос агрегации
+    #SQL-запрос агрегации
     query = '''
-    INSERT INTO daily_app_summary (log_date, app_name, total_duration_minutes)
+    INSERT INTO daily_app_summary (log_date, app_name, total_min)
     SELECT 
         date(start_time), 
         process_name_usable, 
@@ -56,7 +56,6 @@ with DAG(
     start_date=datetime(2026, 6, 1), # Дата, с которой граф начинает гипотетически существовать
     catchup=False                     # Не нужно лихорадочно выполнять задачи за прошлые дни при старте
 ) as dag:
-
     # Объявляем нашу задачу
     aggregate_task = PythonOperator(
         task_id='aggregate_raw_logs',

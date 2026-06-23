@@ -23,7 +23,7 @@ from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessio
 # --- ИГНОР БРАУЗЕРОВ ---
 BROWSERS_TO_IGNORE = {'chrome.exe', 'msedge.exe', 'browser.exe', 'yandex.exe', 'opera.exe', 'brave.exe'}
 # --- НАСТРОЙКИ AFK ---
-AFK_THRESHOLD_SECONDS = 180  # 3 минуты бездействия = скрипт встает на паузу
+AFK_THRESHOLD_SECONDS = 300  # 5 минут бездействия = скрипт встает на паузу
 # --- OBSIDIAN ---
 OBSIDIAN_BRAIN_PATH = 'Obsidian_brain/Daily_logs'
 os.makedirs(OBSIDIAN_BRAIN_PATH, exist_ok=True)
@@ -90,7 +90,7 @@ else:
     with open('config/process_names.json', 'r', encoding='utf-8') as file:
         names = json.load(file)
 
-conn = sqlite3.connect('data/screen_time.db', check_same_thread=False)
+conn = sqlite3.connect('data/screen_time.db', check_same_thread=False, timeout=30)
 cursor = conn.cursor()
 
 def run_query(query, params=(), many=False):

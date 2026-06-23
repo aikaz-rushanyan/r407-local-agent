@@ -1,6 +1,7 @@
 import streamlit as st
 from db_agent import DatabaseAnalyst
 from main_agent import MainAgent
+import traceback
 
 st.set_page_config(page_title='R-407', page_icon='🤖')
 st.title('R-407: Чат с дроидом')
@@ -37,7 +38,7 @@ if user_request := st.chat_input('Спроси что-нибудь про сво
                 ai_answer = main_agent.answer(user_request, db_data="Данные БД не требуются. Веди обычный диалог в своем стиле.")
         
         except Exception as e:
-            ai_answer = f'Микросхемы воспылали... Ошибка: {e}'
+            ai_answer = f'Микросхемы воспылали... Ошибка: {traceback.format_exc()}'
 
     st.session_state.messages.append({'role': 'assistant', 'content': ai_answer})
     with st.chat_message('assistant'):

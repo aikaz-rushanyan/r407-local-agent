@@ -32,11 +32,22 @@ class MainAgent:
                 temperature=0.7,
                 max_tokens=1500
                 )
+            self.routing_llm = ChatOpenAI(
+                model_name=llm_model,
+                base_url='https://openrouter.ai/api/v1',
+                openai_api_key=os.getenv('OPENROUTER_API_KEY'),
+                temperature=0.0,
+                max_tokens=1500
+                )
         else:
             print("[Система] Запуск дроида в автономном локальном режиме (Ollama)...")
             self.llm = OllamaLLM(
-                model=os.getenv("LOCAL_MODEL", "R-407:gemma3:4b"), 
+                model=os.getenv("LOCAL_MODEL", "R-407-gemma3:4b"), 
                 temperature=0.7
+            )
+            self.routing_llm = OllamaLLM(
+                model=os.getenv("LOCAL_MODEL", "R-407-gemma3:4b"), 
+                temperature=0.0
             )
 
         self.schema = f'''
@@ -71,9 +82,9 @@ class MainAgent:
         Запрос пользователя: "{user_request}"
         Ответ (только одно слово):
         '''
-        decision_llm = self.llm.bind(temperature=0.0)
-        result = decision_llm.invoke(prompt)
-        decision = result.text.strip().upper()
+        result = self.routing_llm.invoke(prompt)
+        res_text = result.content if hasattr(result, 'content') else result
+        decision = res_text.strip().upper()
 
         if 'DB' in decision:
             return 'DB'
@@ -88,7 +99,8 @@ class MainAgent:
         Ничего лишнего, никаких эмоций, только запрос для db_agent.
         '''
         result = self.llm.invoke(prompt)
-        return result.text
+        res_text = result.content if hasattr(result, 'content') else result
+        return res_text
     
     def answer(self, user_request: str, db_data: str) -> str:
         
@@ -120,7 +132,8 @@ class MainAgent:
         # 3. Отправляем обе инструкции в модель списком
         messages = [system_instruction, user_context]
         result = self.llm.invoke(messages)
-        return result.text
+        res_text = result.content if hasattr(result, 'content') else result
+        return res_text
     
     
 if __name__ == '__main__':

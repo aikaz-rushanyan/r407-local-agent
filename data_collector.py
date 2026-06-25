@@ -13,16 +13,24 @@ import asyncio
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import threading
+import pystray
+from PIL import Image, ImageDraw
 from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
 from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionPlaybackStatus
+
+# === ЛОГИКА СБОРА ДАННЫХ ===
 
 # --- ИГНОР БРАУЗЕРОВ ---
 BROWSERS_TO_IGNORE = {'chrome.exe', 'msedge.exe', 'browser.exe', 'yandex.exe', 'opera.exe', 'brave.exe'}
 # --- НАСТРОЙКИ AFK ---
-AFK_THRESHOLD_SECONDS = 180  # 3 минуты бездействия = скрипт встает на паузу
+AFK_THRESHOLD_SECONDS = 300  # 5 минут бездействия = скрипт встает на паузу
 # --- OBSIDIAN ---
 OBSIDIAN_BRAIN_PATH = 'Obsidian_brain/Daily_logs'
 os.makedirs(OBSIDIAN_BRAIN_PATH, exist_ok=True)
+
+# Флаги для управления треем и потоками
+program_alive = True
+is_running = True
 
 # Замок для безопасной записи в базу из разных потоков (Main loop и Flask)
 db_lock = threading.Lock()
@@ -67,16 +75,22 @@ async def is_media_playing_async():
     return False
 
 def check_media():
-    """Обертка, чтобы было удобно использовать это в обычном коде"""
+    """Обертка, чтобы было удобно использовать is_media_playing_async в обычном коде"""
     return asyncio.run(is_media_playing_async())
 
 # --- ИНИЦИАЛИЗАЦИЯ БАЗЫ ---
 os.makedirs('data', exist_ok=True)
+os.makedirs('config', exist_ok=True)
 
-with open('config/process_names.json', 'r', encoding='utf-8') as file:
-    names = json.load(file)
+if not os.path.exists('config/process_names.json'):
+    names = {'Code.exe': 'VS Code'}
+    with open('config/process_names.json', 'w', encoding='utf-8') as file:
+        json.dump(names, file, ensure_ascii=False, indent=4)
+else:
+    with open('config/process_names.json', 'r', encoding='utf-8') as file:
+        names = json.load(file)
 
-conn = sqlite3.connect('data/screen_time.db', check_same_thread=False)
+conn = sqlite3.connect('data/screen_time.db', check_same_thread=False, timeout=30)
 cursor = conn.cursor()
 
 def run_query(query, params=(), many=False):
@@ -236,19 +250,18 @@ def receive_browser_log():
 def start_server():
     # Запускаем сервер на порту 5000 без дебаг-режима, чтобы не ломать потоки
     app.run(port=5000, debug=False, use_reloader=False)
+    print("API-сервер для браузерного расширения запущен на http://127.0.0.1:5000")
 
-if __name__ == '__main__':
-    try:
-        server_thread = threading.Thread(target=start_server, daemon=True)
-        server_thread.start()
-        print("API-сервер для браузерного расширения запущен на http://127.0.0.1:5000")
+def data_collector_loop():
+    global is_running, program_alive
 
-        last_window = None
-        start_time = datetime.now()
+    last_window = None
+    start_time = datetime.now()
 
-        print(f"Сборщик запущен. Таймер AFK: {AFK_THRESHOLD_SECONDS} секунд.")
+    print(f"Сборщик запущен. Таймер AFK: {AFK_THRESHOLD_SECONDS} секунд.")
 
-        while True:
+    while program_alive:
+        if is_running:
             idle_seconds = get_idle_duration()
             # Если комп не трогали дольше лимита, принудительно переводим окно в статус AFK
             if idle_seconds >= AFK_THRESHOLD_SECONDS and not check_media():
@@ -278,11 +291,63 @@ if __name__ == '__main__':
                     start_time = now
             
             time.sleep(1)
+        else:
+            time.sleep(1)
 
-    except KeyboardInterrupt:
-        now = datetime.now()
-        if last_window is not None:
-            save_log_entry(last_window, start_time, now)
-        
-        conn.close()
-        print('Сохранено и остановлено.')
+    now = datetime.now()
+    if last_window is not None:
+        save_log_entry(last_window, start_time, now)
+    conn.close()
+    print('Сохранено и остановлено.')
+
+
+# === ЛОГИКА ТРЕЯ ===
+
+def create_circle_image(color):
+    width, height = 64, 64
+    image = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+    dc = ImageDraw.Draw(image)
+    dc.ellipse((4, 4, width-4, height-4), fill=color, outline='black', width=2)
+    return image
+
+def toggle_status(icon, item):
+    global is_running
+    is_running = not is_running
+    if is_running:
+        icon.icon = create_circle_image('green')
+        icon.title = "Droid Data Collector (Активен)"
+        print("Сборщик запущен.")
+    else:
+        icon.icon = create_circle_image('red')
+        icon.title = "Droid Data Collector (На паузе)"
+        print("Сборщик поставлен на паузу.")
+
+def on_exit_clicked(icon, item):
+    global is_running, program_alive
+    print("Уничтожение приложения...")
+    is_running = False
+    program_alive = False # Завершаем цикл my_data_collector_logic
+    icon.stop()           # Закрываем трей
+
+def run_tray():
+    """Точка сборки всех потоков"""
+    # 1. Стартуем поток Flask-сервера
+    server_thread = threading.Thread(target=start_server, daemon=True)
+    server_thread.start()
+
+    # 2. Стартуем поток сборщика данных
+    collector_thread = threading.Thread(target=data_collector_loop, daemon=True)
+    collector_thread.start()
+
+    # 3. Стартуем сам Трей (блокирует консоль)
+    icon = pystray.Icon("data_collector_services")
+    icon.icon = create_circle_image('green')
+    icon.title = "Droid Data Collector (Активен)"
+    icon.menu = pystray.Menu(
+        pystray.MenuItem(lambda text: "Поставить на ПАУЗУ" if is_running else "ЗАПУСТИТЬ сбор", toggle_status),
+        pystray.MenuItem('Выход', on_exit_clicked)
+    )
+    icon.run()
+
+if __name__ == '__main__':
+    run_tray()

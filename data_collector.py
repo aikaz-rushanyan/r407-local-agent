@@ -17,13 +17,13 @@ import pystray
 from PIL import Image, ImageDraw
 from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
 from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionPlaybackStatus
-
+from utils import sent_tg_report, create_data_mart
 # === ЛОГИКА СБОРА ДАННЫХ ===
 
 # --- ИГНОР БРАУЗЕРОВ ---
 BROWSERS_TO_IGNORE = {'chrome.exe', 'msedge.exe', 'browser.exe', 'yandex.exe', 'opera.exe', 'brave.exe'}
 # --- НАСТРОЙКИ AFK ---
-AFK_THRESHOLD_SECONDS = 180  # 3 минуты бездействия = скрипт встает на паузу
+AFK_THRESHOLD_SECONDS = 300  # 5 минут бездействия = скрипт встает на паузу
 # --- OBSIDIAN ---
 OBSIDIAN_BRAIN_PATH = 'Obsidian_brain/Daily_logs'
 os.makedirs(OBSIDIAN_BRAIN_PATH, exist_ok=True)
@@ -90,7 +90,7 @@ else:
     with open('config/process_names.json', 'r', encoding='utf-8') as file:
         names = json.load(file)
 
-conn = sqlite3.connect('data/screen_time.db', check_same_thread=False)
+conn = sqlite3.connect('data/screen_time.db', check_same_thread=False, timeout=30)
 cursor = conn.cursor()
 
 def run_query(query, params=(), many=False):
@@ -253,7 +253,8 @@ def start_server():
     print("API-сервер для браузерного расширения запущен на http://127.0.0.1:5000")
 
 def data_collector_loop():
-    global is_running, program_alive
+    # Добавляем last_sent_date в global, чтобы изменять внешнюю переменную
+    global is_running, program_alive, last_sent_date
 
     last_window = None
     start_time = datetime.now()
@@ -261,6 +262,9 @@ def data_collector_loop():
     print(f"Сборщик запущен. Таймер AFK: {AFK_THRESHOLD_SECONDS} секунд.")
 
     while program_alive:
+        now = datetime.now()
+        today = now.date()  # Получаем текущую дату (например, 2026-06-25)
+
         if is_running:
             idle_seconds = get_idle_duration()
             # Если комп не трогали дольше лимита, принудительно переводим окно в статус AFK
@@ -270,11 +274,9 @@ def data_collector_loop():
                 current_window = get_current_window()
 
             if current_window != last_window:
-                now = datetime.now()
                 end_t = now
                 
-                # Отмотка времени: если мы только что провалились в AFK, 
-                # значит последние X секунд мы уже ничего не делали. Вычитаем их из активной программы.
+                # Отмотка времени для корректного учета AFK
                 if current_window[0] == 'AFK':
                     end_t = now - timedelta(seconds=AFK_THRESHOLD_SECONDS)
                     
@@ -283,17 +285,34 @@ def data_collector_loop():
                     
                 last_window = current_window
                 
-                # Если мы провалились в AFK, то он начался X секунд назад.
-                # Если мы вернулись из AFK, активная работа началась прямо сейчас.
                 if current_window[0] == 'AFK':
                     start_time = end_t 
                 else:
                     start_time = now
             
+            # --- ИСПРАВЛЕННАЯ ЛОГИКА ТЕЛЕГРАМА (ВНУТРИ ЦИКЛА) ---
+            # Безопасная проверка времени через часы и минуты, чтобы не конфликтовать с import time
+            if now.hour == 23 and now.minute >= 55 and last_sent_date != today:
+                print("[Collector] Время подошло. Формирую и отправляю отчет в ТГ...")
+                
+                # Сначала обновляем витрину данных (Data Mart)
+                create_data_mart()
+                
+                # Отправляем отчет
+                success = sent_tg_report()
+
+                if success:
+                    last_sent_date = today  # Запоминаем ДАТУ, а не просто строку 'today'
+                    print("[Collector] Отчет успешно отправлен.")
+                else:
+                    print("[Collector] Ошибка отправки отчета, попробую еще раз в следующей итерации.")
+
             time.sleep(1)
         else:
             time.sleep(1)
 
+    # --- КОД ПРИ ВЫХОДЕ ИЗ ПРОГРАММЫ ---
+    # Срабатывает ОДИН РАЗ, когда программа закрывается (program_alive = False)
     now = datetime.now()
     if last_window is not None:
         save_log_entry(last_window, start_time, now)

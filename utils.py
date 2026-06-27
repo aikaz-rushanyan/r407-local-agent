@@ -4,11 +4,12 @@ import sqlite3
 import json
 import requests
 import os
+import pandas as pd
 
 load_dotenv()
 
 #СКРИПТ ДЛЯ ОБНОВЛЕНИЯ process_name_usable в screen_time.db из JSON.
-def update_screen_time_log() -> None: #обновляет БД, ничего не возвращает
+def update_screen_time_log(): #обновляет БД, ничего не возвращает
     #читаем актуальный JSON
     with open('config/process_names.json', 'r', encoding='utf-8') as f:
         names = json.load(f)
@@ -26,7 +27,7 @@ def update_screen_time_log() -> None: #обновляет БД, ничего н�
     print("База успешно обновлена!")
 
 #СКРИПТ, ЧТОБЫ УЗНАТЬ ТЕКУЩУЮ ДАТУ.
-def get_current_date() -> str: #выводит дату
+def get_current_date(): #выводит дату
     now = datetime.now()
     week_lst = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
     current_day = week_lst[now.weekday()] 
@@ -34,7 +35,7 @@ def get_current_date() -> str: #выводит дату
     return f"{now.strftime('%Y-%m-%d')} ({current_day})"
 
 #СКРИПТ ДЛЯ ОТПРАВКИ ОТЧЕТА В ТГ
-def sent_tg_report():
+def send_tg_report(lst):
     token = os.getenv('TG_TOKEN')
     chat_id = os.getenv('TG_CHAT_ID')
     db_path = 'data/screen_time.db' 
@@ -43,17 +44,6 @@ def sent_tg_report():
         print('[Ошибка] В .env не настроены токен или chat_id для Telegram!')
         print(f'TG_TOKEN: {token}\nTG_CHAT_ID: {chat_id}')
         return
-    
-    with sqlite3.connect(db_path) as conn:
-        cursor = conn.cursor()
-        cursor.execute('''
-        SELECT app_name, total_duration_minutes
-        FROM daily_app_summary
-        WHERE date(log_date) = date('now', 'localtime')
-        ORDER BY 2 DESC
-        LIMIT 5;
-        ''')
-        lst = cursor.fetchall()
 
     if not lst:
         result = '📝Сегодня компуктер не включал... логов нет.'
@@ -76,47 +66,24 @@ def sent_tg_report():
         return False
 
 
-def create_data_mart():
-    
-    db_path = 'data/screen_time.db' 
-    
+def get_stats_for_period(start_date, end_date):
+    """
+    Выдает статистику за любой период. 
+    """
+    db_path = 'data/screen_time.db'
     with sqlite3.connect(db_path) as conn:
         cursor = conn.cursor()
-        
-        # создаем таблицу витрины, если её еще нет
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS daily_app_summary (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                log_date DATE,
-                app_name TEXT,
-                total_duration_minutes REAL
-            )
-        ''')
-
-        cursor.execute('''
-        DELETE
-        FROM daily_app_summary
-        WHERE date(log_date) = date('now', 'localtime')
-    ''')
-        
-        print("Запуск агрегации сырых логов за сегодня...")
-
-        cursor.execute('''
-        INSERT INTO daily_app_summary (log_date, app_name, total_duration_minutes)
-        SELECT 
-            date(start_time), 
-            process_name_usable, 
-            ROUND(SUM(duration_seconds) / 60.0, 2) AS mins
-        FROM screen_time_log
-        WHERE date(start_time) = date('now', 'localtime')
-        GROUP BY 2
-        ORDER BY 3 DESC;
-        ''')
-
-    print("Агрегация успешно завершена! Витрина данных обновлена.")
+            SELECT process_name_usable, ROUND(SUM(duration_seconds) / 60.0, 2) AS mins
+            FROM screen_time_log
+            WHERE date(start_time) BETWEEN ? AND ?
+            GROUP BY 1
+            ORDER BY 2 DESC
+            LIMIT 10;
+        ''', (start_date, end_date))
+        return cursor.fetchall()
 
 if __name__ == '__main__':
-    create_data_mart()
-    sent_tg_report()
+    pass
 
 

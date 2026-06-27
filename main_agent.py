@@ -22,18 +22,18 @@ load_dotenv()
 
 class MainAgent:
 
-    def __init__(self, llm_model='gemini-2.5-flash'):
+    def __init__(self):
         if os.getenv('API_PROVIDER', 'local').lower() == 'openrouter':
             print("[Система] Запуск дроида через облачный OpenRouter...")
             self.llm = ChatOpenAI(
-                model_name=llm_model,
+                model_name=os.getenv('API_MAIN_AGENT', 'openrouter/owl-alpha'),
                 base_url='https://openrouter.ai/api/v1',
                 openai_api_key=os.getenv('OPENROUTER_API_KEY'),
                 temperature=0.7,
                 max_tokens=1500
                 )
             self.routing_llm = ChatOpenAI(
-                model_name=llm_model,
+                model_name=os.getenv('API_MAIN_AGENT', 'openrouter/owl-alpha'),
                 base_url='https://openrouter.ai/api/v1',
                 openai_api_key=os.getenv('OPENROUTER_API_KEY'),
                 temperature=0.0,
@@ -42,11 +42,11 @@ class MainAgent:
         else:
             print("[Система] Запуск дроида в автономном локальном режиме (Ollama)...")
             self.llm = OllamaLLM(
-                model=os.getenv("LOCAL_MODEL", "R-407-gemma3:4b"), 
+                model=os.getenv("LOCAL_MAIN_AGENT", "R-407-gemma3:4b"), 
                 temperature=0.7
             )
             self.routing_llm = OllamaLLM(
-                model=os.getenv("LOCAL_MODEL", "R-407-gemma3:4b"), 
+                model=os.getenv("LOCAL_MAIN_AGENT", "R-407-gemma3:4b"), 
                 temperature=0.0
             )
 
@@ -94,7 +94,7 @@ class MainAgent:
         prompt = f'''
         Схема бд: {self.schema},
         Запрос пользвателя: {user_request},
-        Словарь процессов (process_name: process_name_usable): {self.json_schema} ,
+        Словарь процессов (process_name: process_name_usable): {self.json_schema},
         Твоя задача переформулировать запрос пользвателя для db_agent (ИИ-агент, выполняющий sql-запросы).
         Ничего лишнего, никаких эмоций, только запрос для db_agent.
         '''
@@ -137,10 +137,4 @@ class MainAgent:
     
     
 if __name__ == '__main__':
-    request = 'Сделай топ 5 программ по времени?'
-    analyst = DatabaseAnalyst(db_path='./data/screen_time.db')
-    analyst_answer = analyst.get_data(request)
-
-    main_agent = MainAgent()
-    
-    print(main_agent.answer(request, analyst_answer))
+    print(os.getenv('API_PROVIDER', 'local').lower())

@@ -18,12 +18,12 @@ load_dotenv()
 
 class DatabaseAnalyst:
 
-    def __init__(self, db_path, llm_model='gemini-2.5-flash'):
+    def __init__(self, db_path):
 
         if os.getenv('API_PROVIDER', 'local').lower() == 'openrouter':
             print("[Система] Запуск SQL-дроида через облачный OpenRouter...")
             self.llm = ChatOpenAI(
-                model_name=llm_model,
+                model_name=os.getenv('API_DB_AGENT', 'openrouter/owl-alpha'),
                 base_url='https://openrouter.ai/api/v1',
                 openai_api_key=os.getenv('OPENROUTER_API_KEY'),
                 temperature=0.0,
@@ -32,7 +32,7 @@ class DatabaseAnalyst:
         else:
             print("[Система] Запуск SQL-дроида в автономном локальном режиме (Ollama)...")
             self.llm = OllamaLLM(
-                model=os.getenv("LOCAL_MODEL", "R-407:gemma3:4b"), 
+                model=os.getenv("LOCAL_DB_AGENT", "R-407-gemma3:4b"), 
                 temperature=0.0
             )
         self.db_path=db_path

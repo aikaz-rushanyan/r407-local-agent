@@ -17,7 +17,7 @@ import pystray
 from PIL import Image, ImageDraw
 from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
 from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionPlaybackStatus
-from utils import sent_tg_report, create_data_mart
+from utils import send_tg_report
 # === ЛОГИКА СБОРА ДАННЫХ ===
 
 # --- ИГНОР БРАУЗЕРОВ ---
@@ -252,9 +252,11 @@ def start_server():
     app.run(port=5000, debug=False, use_reloader=False)
     print("API-сервер для браузерного расширения запущен на http://127.0.0.1:5000")
 
+last_send_date = None
+
 def data_collector_loop():
     # Добавляем last_sent_date в global, чтобы изменять внешнюю переменную
-    global is_running, program_alive, last_sent_date
+    global is_running, program_alive, last_send_date
 
     last_window = None
     start_time = datetime.now()
@@ -290,19 +292,21 @@ def data_collector_loop():
                 else:
                     start_time = now
             
-            # --- ИСПРАВЛЕННАЯ ЛОГИКА ТЕЛЕГРАМА (ВНУТРИ ЦИКЛА) ---
-            # Безопасная проверка времени через часы и минуты, чтобы не конфликтовать с import time
-            if now.hour == 23 and now.minute >= 55 and last_sent_date != today:
+            if now.hour == 23 and now.minute >= 55 and last_send_date != today:
                 print("[Collector] Время подошло. Формирую и отправляю отчет в ТГ...")
                 
-                # Сначала обновляем витрину данных (Data Mart)
-                create_data_mart()
-                
-                # Отправляем отчет
-                success = sent_tg_report()
+                report = run_query('''
+                        SELECT process_name_usable, ROUND(SUM(duration_seconds) / 60.0, 2) AS mins
+                        FROM screen_time_log
+                        WHERE date(start_time) = date("now", "localtime")
+                        GROUP BY 1
+                        ORDER BY 2 DESC
+                        LIMIT 7;'''
+                        )
+                success = send_tg_report(report)
 
                 if success:
-                    last_sent_date = today  # Запоминаем ДАТУ, а не просто строку 'today'
+                    last_send_date = today
                     print("[Collector] Отчет успешно отправлен.")
                 else:
                     print("[Collector] Ошибка отправки отчета, попробую еще раз в следующей итерации.")
@@ -310,9 +314,7 @@ def data_collector_loop():
             time.sleep(1)
         else:
             time.sleep(1)
-
-    # --- КОД ПРИ ВЫХОДЕ ИЗ ПРОГРАММЫ ---
-    # Срабатывает ОДИН РАЗ, когда программа закрывается (program_alive = False)
+            
     now = datetime.now()
     if last_window is not None:
         save_log_entry(last_window, start_time, now)

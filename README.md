@@ -1,4 +1,4 @@
-# R-407: Local Data Science AI Agent 🤖📊
+# R-407: Local Data Science AI Agent 🤖📊 (README нуждается в обновлении)
 
 Локальный ИИ-ассистент, который анализирует логи использования компьютера (Screen Time) с помощью Text-to-SQL архитектуры.
 

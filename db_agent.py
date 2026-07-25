@@ -20,7 +20,7 @@ class DatabaseAnalyst:
 
     def __init__(self, db_path):
 
-        if os.getenv('API_PROVIDER', 'local').lower() == 'openrouter':
+        if os.getenv('DB_AGENT_PROVIDER', 'local').lower() == 'openrouter':
             print("[Система] Запуск SQL-дроида через облачный OpenRouter...")
             self.llm = ChatOpenAI(
                 model_name=os.getenv('API_DB_AGENT', 'openrouter/owl-alpha'),

@@ -23,7 +23,7 @@ load_dotenv()
 class MainAgent:
 
     def __init__(self):
-        if os.getenv('API_PROVIDER', 'local').lower() == 'openrouter':
+        if os.getenv('MAIN_AGENT_PROVIDER', 'local').lower() == 'openrouter':
             print("[Система] Запуск дроида через облачный OpenRouter...")
             self.llm = ChatOpenAI(
                 model_name=os.getenv('API_MAIN_AGENT', 'openrouter/owl-alpha'),

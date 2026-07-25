@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from main_agent import MainAgent
 from db_agent import DatabaseAnalyst
 from utils import get_stats_for_period
+import traceback
 
 main_agent = MainAgent()
 analyst_agent = DatabaseAnalyst(db_path='./data/screen_time.db')
@@ -154,7 +155,7 @@ async def main(page: ft.Page):
                 ai_answer = await asyncio.to_thread(main_agent.answer, user_text, "Данные БД не требуются.")
                 
         except Exception as err:
-            ai_answer = f"Критическая ошибка систем: {err}"
+            ai_answer = f"Критическая ошибка систем: {traceback.format_exc()}"
 
         chat_history.controls.append(
             ft.Container(

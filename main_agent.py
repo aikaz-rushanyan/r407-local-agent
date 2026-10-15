@@ -3,6 +3,7 @@ from db_agent import DatabaseAnalyst
 #from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langchain_ollama import OllamaLLM
+from langchain_gigachat.chat_models import GigaChat
 from dotenv import load_dotenv
 from datetime import datetime
 from langchain_core.messages import SystemMessage, HumanMessage
@@ -25,19 +26,13 @@ class MainAgent:
     def __init__(self):
         if os.getenv('MAIN_AGENT_PROVIDER', 'local').lower() == 'openrouter':
             print("[Система] Запуск дроида через облачный OpenRouter...")
-            self.llm = ChatOpenAI(
-                model_name=os.getenv('API_MAIN_AGENT', 'openrouter/owl-alpha'),
-                base_url='https://openrouter.ai/api/v1',
-                openai_api_key=os.getenv('OPENROUTER_API_KEY'),
-                temperature=0.7,
-                max_tokens=1500
+            self.llm = GigaChat(
+                credentials=os.getenv('GIGACHAT_KEY', None),
+                temperature=0.7
                 )
-            self.routing_llm = ChatOpenAI(
-                model_name=os.getenv('API_MAIN_AGENT', 'openrouter/owl-alpha'),
-                base_url='https://openrouter.ai/api/v1',
-                openai_api_key=os.getenv('OPENROUTER_API_KEY'),
-                temperature=0.0,
-                max_tokens=1500
+            self.routing_llm = GigaChat(
+                credentials=os.getenv('GIGACHAT_KEY', None),
+                temperature=0.0
                 )
         else:
             print("[Система] Запуск дроида в автономном локальном режиме (Ollama)...")

@@ -12,6 +12,8 @@ Obsidian_brain/
 *.sqlite
 *.sqlite3
 *.env
+*.cer
+*.bat
 
 # === Кэш Python ===
 __pycache__/

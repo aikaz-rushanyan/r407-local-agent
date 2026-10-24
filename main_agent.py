@@ -89,17 +89,17 @@ class MainAgent:
             return 'DB'
         return 'CHAT'
 
-    def translate_for_db_agent(self, user_request: str) -> str:
-        prompt = f'''
-        Схема бд: {self.schema},
-        Запрос пользвателя: {user_request},
-        Словарь процессов (process_name: process_name_usable): {self.json_schema},
-        Твоя задача переформулировать запрос пользвателя для db_agent (ИИ-агент, выполняющий sql-запросы).
-        Ничего лишнего, никаких эмоций, только запрос для db_agent.
-        '''
-        result = self.llm.invoke(prompt)
-        res_text = result.content if hasattr(result, 'content') else result
-        return res_text
+    # def translate_for_db_agent(self, user_request: str) -> str:
+    #     prompt = f'''
+    #     Схема бд: {self.schema},
+    #     Запрос пользвателя: {user_request},
+    #     Словарь процессов (process_name: process_name_usable): {self.json_schema},
+    #     Твоя задача переформулировать запрос пользвателя для db_agent (ИИ-агент, выполняющий sql-запросы).
+    #     Ничего лишнего, никаких эмоций, только запрос для db_agent.
+    #     '''
+    #     result = self.llm.invoke(prompt)
+    #     res_text = result.content if hasattr(result, 'content') else result
+    #     return res_text
     
     def answer(self, user_request: str, db_data: str) -> str:
         

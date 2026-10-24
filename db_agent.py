@@ -26,7 +26,7 @@ class DatabaseAnalyst:
                 openai_api_key=os.getenv('PROXYAPI_QWEN_API', None),
                 base_url="https://api.proxyapi.ru/v1",
                 model_name=os.getenv('PROXYAPI_QWEN_ACTIVE_MODEL', 'qwen/qwen3.8-flash'),
-                temperature=0.0
+                temperature=0.0 
                 )
         else:
             print("[Система] Запуск SQL-дроида в автономном локальном режиме (Ollama)...")

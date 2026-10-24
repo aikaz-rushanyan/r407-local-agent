@@ -8,7 +8,7 @@ from utils import get_stats_for_period
 import traceback
 
 main_agent = MainAgent()
-analyst_agent = DatabaseAnalyst(db_path='./data/screen_time.db')
+db_agent = DatabaseAnalyst(db_path='./data/screen_time.db')
 
 async def main(page: ft.Page):
     page.title = 'DROID R407'
@@ -149,13 +149,17 @@ async def main(page: ft.Page):
             
             if decision == 'DB':
                 sql_query = await asyncio.to_thread(main_agent.translate_for_db_agent, user_text)
-                raw_data = await asyncio.to_thread(analyst_agent.get_data, sql_query)
+                raw_data = await asyncio.to_thread(db_agent.get_data, sql_query)
                 ai_answer = await asyncio.to_thread(main_agent.answer, user_text, str(raw_data))
             else:
                 ai_answer = await asyncio.to_thread(main_agent.answer, user_text, "Данные БД не требуются.")
                 
         except Exception as err:
             ai_answer = f"Критическая ошибка систем: {traceback.format_exc()}"
+
+        if thinking_bubble in chat_history.controls:
+            chat_history.controls.remove(thinking_bubble)
+
 
         chat_history.controls.append(
             ft.Container(
@@ -176,6 +180,7 @@ async def main(page: ft.Page):
                 border_radius=8
             )
         )
+        
         page.update()
 
     chat_input = ft.TextField(

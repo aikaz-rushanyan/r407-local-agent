@@ -20,14 +20,13 @@ class DatabaseAnalyst:
 
     def __init__(self, db_path):
 
-        if os.getenv('DB_AGENT_PROVIDER', 'local').lower() == 'openrouter':
-            print("[Система] Запуск SQL-дроида через облачный OpenRouter...")
+        if os.getenv('DB_AGENT_PROVIDER', 'local').lower() == 'cloud':
+            print("[Система] Запуск SQL-дроида через облачный сервис...")
             self.llm = ChatOpenAI(
-                model_name=os.getenv('API_DB_AGENT', 'openrouter/owl-alpha'),
-                base_url='https://openrouter.ai/api/v1',
-                openai_api_key=os.getenv('OPENROUTER_API_KEY'),
-                temperature=0.0,
-                max_tokens=1500
+                openai_api_key=os.getenv('PROXYAPI_QWEN_API', None),
+                base_url="https://api.proxyapi.ru/v1",
+                model_name=os.getenv('PROXYAPI_QWEN_ACTIVE_MODEL', 'qwen/qwen3.8-flash'),
+                temperature=0.0
                 )
         else:
             print("[Система] Запуск SQL-дроида в автономном локальном режиме (Ollama)...")
